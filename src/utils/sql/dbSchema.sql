@@ -20,7 +20,7 @@ CREATE TABLE  IF NOT EXISTS medicine (
    name VARCHAR(150) NOT NULL,
    description TEXT NOT NULL,
    form VARCHAR(50),
-   buy_price DECIMAL(10,2) NOT NULL,
+   purchase_price DECIMAL(10,2) NOT NULL,
    sell_price DECIMAL(10,2) NOT NULL,
    stock INT DEFAULT 0,
    expiration_date DATE
