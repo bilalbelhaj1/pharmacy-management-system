@@ -1,3 +1,4 @@
+import view.Dashboard;
 import view.Login;
 
 /**
@@ -6,6 +7,6 @@ import view.Login;
 public class Main {
     public static void main(String[] args) {
         System.out.println("The journey starts here");
-        new Login();
+        new Dashboard();
     }
 }
