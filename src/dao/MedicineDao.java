@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,23 +39,31 @@ public class MedicineDao {
                res.getString("description"),
                res.getString("form"),
                res.getInt("stock"),
-                LocalDate.of(2027, 12,12)
+               LocalDate.of(2027, 12,12)
             ));
         }
         return medicines;
     }
 
-    public void addMedicine(String name, BigDecimal price, String description, String form, int stock, LocalDate expirationDat) throws SQLException {
-        String sql = "INSERT INTO medicine(name,price,description,form,stock,expiration_date) VALUES(?,?,?,?,?,?)";
+    public void addMedicine(String name, String description, BigDecimal sellPrice, BigDecimal purchasePrice, String form, int stock, Date expirationDate) throws SQLException {
+        String sql = "INSERT INTO medicine(name,description,sell_price,purchase_price,form,stock,expiration_date) VALUES(?,?,?,?,?,?,?)";
         PreparedStatement stm = conn.prepareStatement(sql);
 
         stm.setString(1, name);
-        stm.setBigDecimal(2, price);
-        stm.setString(3, description);
-        stm.setString(4, form);
-        stm.setInt(5, stock);
-        stm.setDate(6, java.sql.Date.valueOf(expirationDat));
+        stm.setString(2, description);
+        stm.setBigDecimal(3, sellPrice);
+        stm.setBigDecimal(4, purchasePrice);
+        stm.setString(5, form);
+        stm.setInt(6, stock);
+        stm.setDate(7, expirationDate);
 
+        int i = stm.executeUpdate();
+    }
+    public void deleteMedicine(int id) throws SQLException {
+        String sql = "DELETE FROM medicine WHERE id = ?";
+        PreparedStatement stm = conn.prepareStatement(sql);
+
+        stm.setInt(1, id);
         int i = stm.executeUpdate();
     }
 }

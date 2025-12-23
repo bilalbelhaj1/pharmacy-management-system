@@ -1,15 +1,35 @@
 package view.pages;
 
+import controller.MedicineController;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.sql.SQLException;
 
 /**
  * @author $(bilal belhaj)
  **/
-public class AddMedicine extends JFrame {
+public class AddMedicine extends JFrame implements ActionListener{
+    JTextField nameInput;
+    JTextField purchasePriceInput;
+    JTextField sellPriceInput;
+    JTextField formInput;
+    JTextArea descriptionInput;
+    JTextField exDataInput;
+    JTextField stockInput;
+    JDialog successDialog;
+    JDialog errorDialog;
+    JFrame parent;
+    Button addButton;
+    MedicineController mc = new MedicineController();
     public AddMedicine(JFrame parent) {
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setSize(500, 500);
+        this.parent = parent;
         this.setLocationRelativeTo(parent);
 
         JPanel mainPanel = new JPanel(new GridLayout(8, 1));
@@ -17,7 +37,7 @@ public class AddMedicine extends JFrame {
         // name
         JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel nameLabel = new JLabel("Medicine Title: ");
-        JTextField nameInput = new JTextField();
+        nameInput = new JTextField();
         nameInput.setColumns(30);
         namePanel.add(nameLabel);
         namePanel.add(nameInput);
@@ -25,7 +45,7 @@ public class AddMedicine extends JFrame {
         // purchase price
         JPanel purchasePricePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel purchasePriceLabel = new JLabel("Purchase Price: ");
-        JTextField purchasePriceInput = new JTextField();
+        purchasePriceInput = new JTextField();
         purchasePriceInput.setColumns(30);
         purchasePricePanel.add(purchasePriceLabel);
         purchasePricePanel.add(purchasePriceInput);
@@ -33,14 +53,14 @@ public class AddMedicine extends JFrame {
         // sell price
         JPanel sellPricePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel sellPriceLabel = new JLabel("Sell Price: ");
-        JTextField sellPriceInput = new JTextField();
+        sellPriceInput = new JTextField();
         sellPriceInput.setColumns(30);
         sellPricePanel.add(sellPriceLabel);
         sellPricePanel.add(sellPriceInput);
         // form
         JPanel formPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel formLabel = new JLabel("Form: ");
-        JTextField formInput = new JTextField();
+        formInput = new JTextField();
         formInput.setColumns(30);
         formPanel.add(formLabel);
         formPanel.add(formInput);
@@ -48,22 +68,21 @@ public class AddMedicine extends JFrame {
         // description
         JPanel descriptionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel descriptionLabel = new JLabel("Description: ");
-        JTextArea descriptionInput = new JTextArea();
+        descriptionInput = new JTextArea();
         descriptionInput.setColumns(30);
         descriptionPanel.add(descriptionLabel);
         descriptionPanel.add(descriptionInput);
         // stock
         JPanel stockPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel stockLabel = new JLabel("Stock: ");
-        JTextField stockInput = new JTextField();
+        stockInput = new JTextField();
         stockInput.setColumns(30);
         stockPanel.add(stockLabel);
         stockPanel.add(stockInput);
         // expiration date
-
         JPanel exDatePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JLabel exDateLabel = new JLabel("Stock: ");
-        JTextField exDataInput = new JTextField();
+        JLabel exDateLabel = new JLabel("Expiration Date(0000-00-00): ");
+        exDataInput = new JTextField();
         exDataInput.setColumns(30);
         exDatePanel.add(exDateLabel);
         exDatePanel.add(exDataInput);
@@ -73,8 +92,10 @@ public class AddMedicine extends JFrame {
         cancelButton.setBackground(Color.RED);
         cancelButton.addActionListener(e-> this.dispose());
 
-        Button addButton = new Button("Add");
+        addButton = new Button("Add");
         addButton.setBackground(Color.GREEN);
+        addButton.addActionListener(this);
+
         JPanel buttonsPanel = new JPanel(new GridLayout(1,2));
         buttonsPanel.add(cancelButton);
         buttonsPanel.add(addButton);
@@ -88,7 +109,36 @@ public class AddMedicine extends JFrame {
         mainPanel.add(exDatePanel);
         mainPanel.add(buttonsPanel);
 
+        // success dialog
+        successDialog = new JDialog();
+        successDialog.setTitle("Success..");
+        successDialog.setSize(300, 300);
+        successDialog.setBackground(Color.GREEN);
+        successDialog.add(new Label("Medicine Added"));
+        // error
+        errorDialog = new JDialog();
+        errorDialog.setTitle("Error");
+        errorDialog.setSize(300, 300);
+        errorDialog.setBackground(Color.RED);
+        errorDialog.add(new Label("Something went wrong could not add the mmedicine"));
+
         this.add(mainPanel);
         this.setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() == addButton) {
+            try {
+                mc.addMedicine(nameInput.getText(), descriptionInput.getText(), BigDecimal.valueOf(Integer.parseInt(sellPriceInput.getText())), BigDecimal.valueOf(Integer.parseInt(purchasePriceInput.getText())), formInput.getText(), Integer.parseInt(stockInput.getText()) , Date.valueOf(exDataInput.getText()));
+                this.dispose();
+                this.successDialog.setLocationRelativeTo(parent);
+                this.successDialog.setVisible(true);
+            } catch (SQLException ex) {
+                this.dispose();
+                this.errorDialog.setLocationRelativeTo(parent);
+                this.errorDialog.setVisible(true);
+            }
+        }
     }
 }

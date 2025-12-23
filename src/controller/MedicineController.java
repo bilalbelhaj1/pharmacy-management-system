@@ -3,6 +3,8 @@ package controller;
 import dao.MedicineDao;
 import model.Medicine;
 
+import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -17,5 +19,13 @@ public class MedicineController {
 
     public List<Medicine> getAllMedicines() throws SQLException {
         return dao.getAll();
+    }
+
+    public void addMedicine(String name, String description, BigDecimal sellPrice, BigDecimal purchasePrice, String form, int stock, Date expirationDate) throws SQLException {
+        dao.addMedicine(name, description, sellPrice, purchasePrice, form,stock, expirationDate);
+    }
+
+    public void deleteMedicine(int id) throws SQLException {
+        dao.deleteMedicine(id);
     }
 }

@@ -37,9 +37,13 @@ public class ProductsPanel extends JPanel {
             JPanel headerPanel = new JPanel(new BorderLayout());
             headerPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
             JLabel label = new JLabel("All Medicines");
-            JButton exportButton = new JButton("Export List");
+            Button exportButton = new Button("Export List");
+            exportButton.setBackground(Color.green);
+            exportButton.setFont(new Font("Segoe UI", Font.PLAIN, 19));
+            exportButton.setForeground(Color.WHITE);
             headerPanel.add(label, BorderLayout.WEST);
             headerPanel.add(exportButton, BorderLayout.EAST);
+
             // Table
             JTable table = new JTable(data, columns);
             table.setShowGrid(true);
