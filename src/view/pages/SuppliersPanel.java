@@ -3,5 +3,5 @@ package view.pages;
 /**
  * @author $(bilal belhaj)
  **/
-public class PurchasesPanel {
+public class SuppliersPanel {
 }

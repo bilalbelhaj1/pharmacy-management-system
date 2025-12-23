@@ -1,12 +1,7 @@
--- ===============================
--- Database
--- ===============================
 CREATE DATABASE IF NOT EXISTS pharmacyDB;
 USE pharmacyDB;
 
--- ===============================
 -- Users Table
--- ===============================
 CREATE TABLE users (
     id INT PRIMARY KEY AUTO_INCREMENT,
     username VARCHAR(30) NOT NULL UNIQUE,
@@ -14,9 +9,7 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- ===============================
 -- Medicine Table
--- ===============================
 CREATE TABLE medicine (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(150) NOT NULL,
@@ -28,9 +21,7 @@ CREATE TABLE medicine (
     expiration_date DATE NOT NULL
 );
 
--- ===============================
 -- Supplier Table
--- ===============================
 CREATE TABLE supplier (
     id INT PRIMARY KEY AUTO_INCREMENT,
     first_name VARCHAR(30) NOT NULL,
@@ -39,9 +30,7 @@ CREATE TABLE supplier (
     phone_number VARCHAR(20) NOT NULL UNIQUE
 );
 
--- ===============================
 -- Sale Table
--- ===============================
 CREATE TABLE sale (
     id INT PRIMARY KEY AUTO_INCREMENT,
     date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -49,9 +38,7 @@ CREATE TABLE sale (
     status ENUM('PENDING', 'PAID', 'CANCELLED') DEFAULT 'PAID'
 );
 
--- ===============================
 -- Sale Item Table
--- ===============================
 CREATE TABLE sale_item (
     id INT PRIMARY KEY AUTO_INCREMENT,
     sale_id INT NOT NULL,
@@ -65,9 +52,7 @@ CREATE TABLE sale_item (
     UNIQUE (sale_id, medicine_id)
 );
 
--- ===============================
 -- Purchase Table
--- ===============================
 CREATE TABLE purchase (
     id INT PRIMARY KEY AUTO_INCREMENT,
     date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -77,9 +62,7 @@ CREATE TABLE purchase (
     FOREIGN KEY (supplier_id) REFERENCES supplier(id)
 );
 
--- ===============================
 -- Purchase Item Table
--- ===============================
 CREATE TABLE purchase_item (
     id INT PRIMARY KEY AUTO_INCREMENT,
     purchase_id INT NOT NULL,

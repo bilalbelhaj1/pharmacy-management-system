@@ -1,5 +1,8 @@
 package view;
 
+import view.common.Button;
+import view.pages.ProductsPanel;
+
 import javax.swing.*;
 import java.awt.*;
 import javax.swing.border.EmptyBorder;
@@ -41,19 +44,22 @@ public class Dashboard extends JFrame {
         leftBar.setBackground(new Color(34, 49, 63));
         leftBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        String[] leftButtons = {
-                "Dashboard", "Add Product", "Sales", "Purchases",
-                "Suppliers", "Reports", "Users", "Settings"
-        };
+        Button productsButton = new Button("Products");
+        productsButton.addActionListener(e -> showPanel(new ProductsPanel()));
+        Button addProductButton = new Button("Add Product");
+        Button salesButton = new Button("Sales");
+        Button purchasesButton = new Button("Purchases");
+        Button suppliersButton = new Button("Suppliers");
+        Button reportsButton = new Button("Reports");
+        Button usersButton = new Button("Users");
 
-        for (String text : leftButtons) {
-            JButton btn = new JButton(text);
-            btn.setForeground(Color.WHITE);
-            btn.setBackground(new Color(52, 73, 94));
-            btn.setFocusPainted(false);
-            btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
-            leftBar.add(btn);
-        }
+        leftBar.add(productsButton);
+        leftBar.add(addProductButton);
+        leftBar.add(salesButton);
+        leftBar.add(purchasesButton);
+        leftBar.add(suppliersButton);
+        leftBar.add(reportsButton);
+        leftBar.add(usersButton);
 
         // Right Sidebar (Shortcuts / Quick Actions)
         rightBar = new JPanel(new GridLayout(5,1,10,10));
@@ -77,11 +83,7 @@ public class Dashboard extends JFrame {
         mainPanel = new JPanel();
         mainPanel.setBackground(Color.WHITE);
         mainPanel.setLayout(new BorderLayout());
-
-        JLabel welcomeLabel = new JLabel("Welcome to Pharmacy Management Dashboard", SwingConstants.CENTER);
-        welcomeLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        welcomeLabel.setForeground(new Color(44, 62, 80));
-        mainPanel.add(welcomeLabel, BorderLayout.CENTER);
+        mainPanel.add(new ProductsPanel());
 
         // Footer
         footer = new JPanel();
@@ -99,6 +101,13 @@ public class Dashboard extends JFrame {
         add(footer, BorderLayout.SOUTH);
 
         setVisible(true);
+    }
+
+    private void showPanel(JPanel panel) {
+        mainPanel.removeAll();
+        mainPanel.add(panel);
+        mainPanel.revalidate();
+        mainPanel.repaint();
     }
 
     public static void main(String[] args) {

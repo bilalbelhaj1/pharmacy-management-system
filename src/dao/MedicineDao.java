@@ -35,11 +35,12 @@ public class MedicineDao {
             medicines.add(new Medicine(
                res.getInt("id"),
                res.getString("name"),
-               BigDecimal.valueOf(res.getDouble("price")),
+               BigDecimal.valueOf(res.getDouble("sell_price")),
+               BigDecimal.valueOf(res.getDouble("purchase_price")),
                res.getString("description"),
                res.getString("form"),
                res.getInt("stock"),
-               LocalDate.of(ex.getYear(), ex.getMonth(), ex.getDay())
+                LocalDate.of(2027, 12,12)
             ));
         }
         return medicines;

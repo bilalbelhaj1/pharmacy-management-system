@@ -8,7 +8,7 @@ import java.sql.SQLException;
  * @author $(bilal belhaj)
  **/
 public class DbConnection {
-    private static final String url = "jdbc:mysql://localhost:3306";
+    private static final String url = "jdbc:mysql://localhost:3306/pharmacyDB";
     private static final String user = "root";
     private static final String pass = "bilal2025";
     public static Connection conn;
