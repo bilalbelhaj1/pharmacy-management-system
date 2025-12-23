@@ -4,16 +4,25 @@ import controller.MedicineController;
 import model.Medicine;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
 /**
  * @author $(bilal belhaj)
  **/
-public class ProductsPanel extends JPanel {
+public class ProductsPanel extends JPanel implements ActionListener {
     private MedicineController mc;
     private List<Medicine> medicines;
+    Button exportButton;
+    JTable table;
     public ProductsPanel() {
         mc = new MedicineController();
         this.setLayout(new BorderLayout());
@@ -37,15 +46,16 @@ public class ProductsPanel extends JPanel {
             JPanel headerPanel = new JPanel(new BorderLayout());
             headerPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
             JLabel label = new JLabel("All Medicines");
-            Button exportButton = new Button("Export List");
+            exportButton = new Button("Export List");
             exportButton.setBackground(Color.green);
             exportButton.setFont(new Font("Segoe UI", Font.PLAIN, 19));
             exportButton.setForeground(Color.WHITE);
+            exportButton.addActionListener(this);
             headerPanel.add(label, BorderLayout.WEST);
             headerPanel.add(exportButton, BorderLayout.EAST);
 
             // Table
-            JTable table = new JTable(data, columns);
+            table = new JTable(data, columns);
             table.setShowGrid(true);
             table.setShowVerticalLines(true);
             table.setFillsViewportHeight(true);
@@ -60,4 +70,39 @@ public class ProductsPanel extends JPanel {
         }
     }
 
+    public void export(JTable table, File file) throws IOException {
+        FileWriter fileWriter = new FileWriter(file);
+        TableModel model = table.getModel();
+
+        for (int i = 0; i < model.getColumnCount() - 1; i++) {
+            fileWriter.write(model.getColumnName(i) + "\t");
+        }
+        fileWriter.write("\n");
+        for (int i = 0; i < model.getRowCount(); i++) {
+            for (int j = 0; j <  model.getColumnCount() - 1; j++) {
+                fileWriter.write(model.getValueAt(i, j) + "\t");
+            }
+            fileWriter.write("\n");
+        }
+        fileWriter.close();
+    }
+
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == exportButton) {
+            JFileChooser fileChooser = new JFileChooser();
+            int option = fileChooser.showSaveDialog(this);
+            if (option == JFileChooser.APPROVE_OPTION) {
+                String name = fileChooser.getSelectedFile().getName();
+                String path = fileChooser.getSelectedFile().getParentFile().getPath();
+                String file = path + "\\" + name + "xlsx";
+                try {
+                    export(table, new File(file));
+                } catch (Exception er) {
+                    er.printStackTrace();
+                }
+            }
+        }
+    }
 }
