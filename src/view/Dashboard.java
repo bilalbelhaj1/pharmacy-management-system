@@ -1,6 +1,7 @@
 package view;
 
 import view.common.Button;
+import view.pages.AddMedicine;
 import view.pages.ProductsPanel;
 
 import javax.swing.*;
@@ -46,7 +47,10 @@ public class Dashboard extends JFrame {
 
         Button productsButton = new Button("Products");
         productsButton.addActionListener(e -> showPanel(new ProductsPanel()));
+
         Button addProductButton = new Button("Add Product");
+        addProductButton.addActionListener(e -> new AddMedicine(Dashboard.this));
+
         Button salesButton = new Button("Sales");
         Button purchasesButton = new Button("Purchases");
         Button suppliersButton = new Button("Suppliers");
