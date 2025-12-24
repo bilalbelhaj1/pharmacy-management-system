@@ -1,8 +1,7 @@
 package view;
 
 import view.common.Button;
-import view.pages.AddMedicine;
-import view.pages.ProductsPanel;
+import view.pages.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -52,8 +51,14 @@ public class Dashboard extends JFrame {
         addProductButton.addActionListener(e -> new AddMedicine(Dashboard.this));
 
         Button salesButton = new Button("Sales");
+        salesButton.addActionListener(e -> showPanel(new SalesPanel()));
+
         Button purchasesButton = new Button("Purchases");
+        purchasesButton.addActionListener(e -> showPanel(new PurchasesPanel()));
+
         Button suppliersButton = new Button("Suppliers");
+        suppliersButton.addActionListener(e -> showPanel(new SuppliersPanel()));
+
         Button reportsButton = new Button("Reports");
         Button usersButton = new Button("Users");
 

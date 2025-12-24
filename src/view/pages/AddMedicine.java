@@ -113,14 +113,18 @@ public class AddMedicine extends JFrame implements ActionListener{
         successDialog = new JDialog();
         successDialog.setTitle("Success..");
         successDialog.setSize(300, 300);
-        successDialog.setBackground(Color.GREEN);
-        successDialog.add(new Label("Medicine Added"));
+        JLabel successLabel = new JLabel("Medicine added");
+        successLabel.setAlignmentX(JLabel.CENTER);
+        successLabel.setForeground(Color.GREEN);
+        successLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        successDialog.add(successLabel);
         // error
         errorDialog = new JDialog();
         errorDialog.setTitle("Error");
         errorDialog.setSize(300, 300);
-        errorDialog.setBackground(Color.RED);
-        errorDialog.add(new Label("Something went wrong could not add the mmedicine"));
+        JLabel errorLabel = new JLabel("Could not add medicine Something went wrong");
+        errorLabel.setBackground(Color.RED);
+        errorDialog.add(errorLabel);
 
         this.add(mainPanel);
         this.setVisible(true);

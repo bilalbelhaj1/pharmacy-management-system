@@ -66,4 +66,28 @@ public class MedicineDao {
         stm.setInt(1, id);
         int i = stm.executeUpdate();
     }
+
+    public void updateMedicine() {
+        // delete the current medicine and insert the new one
+    }
+
+    public List<Medicine> getLowStockMedicines() throws SQLException {
+        String sql = "SELECT * FROM medicine WHERE stock < 10";
+        PreparedStatement stm = conn.prepareStatement(sql);
+        ResultSet res = stm.executeQuery();
+        List<Medicine> lowStockMedicines = new ArrayList<>();
+        while (res.next()) {
+            lowStockMedicines.add(new Medicine(
+               res.getInt("id"),
+               res.getString("name"),
+               res.getBigDecimal("sell_price"),
+               res.getBigDecimal("purchase_price"),
+               res.getString("description"),
+               res.getString("form"),
+               res.getInt("stock"),
+               res.getDate("expiration_date").toLocalDate()
+            ));
+        }
+        return lowStockMedicines;
+    }
 }
