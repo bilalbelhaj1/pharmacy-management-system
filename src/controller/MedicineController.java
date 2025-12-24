@@ -21,6 +21,10 @@ public class MedicineController {
         return dao.getAll();
     }
 
+    public Medicine getById(int id) throws SQLException {
+        return dao.getMedicineById(id);
+    }
+
     public void addMedicine(String name, String description, BigDecimal sellPrice, BigDecimal purchasePrice, String form, int stock, Date expirationDate) throws SQLException {
         dao.addMedicine(name, description, sellPrice, purchasePrice, form,stock, expirationDate);
     }

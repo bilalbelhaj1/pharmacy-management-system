@@ -59,6 +59,27 @@ public class MedicineDao {
 
         int i = stm.executeUpdate();
     }
+
+    public Medicine getMedicineById(int id) throws SQLException{
+        String sql = "SELECT * FROM medicine WHERE id = ? LIMIT 1";
+        PreparedStatement stm = conn.prepareStatement(sql);
+        stm.setInt(1, id);
+        ResultSet res = stm.executeQuery();
+        if (res.next()) {
+            return new Medicine(
+                    res.getInt("id"),
+                    res.getString("name"),
+                    res.getBigDecimal("sell_price"),
+                    res.getBigDecimal("purchase_price"),
+                    res.getString("description"),
+                    res.getString("form"),
+                    res.getInt("stock"),
+                    res.getDate("expiration_date").toLocalDate()
+            );
+        }
+        return null;
+    }
+
     public void deleteMedicine(int id) throws SQLException {
         String sql = "DELETE FROM medicine WHERE id = ?";
         PreparedStatement stm = conn.prepareStatement(sql);
@@ -67,7 +88,7 @@ public class MedicineDao {
         int i = stm.executeUpdate();
     }
 
-    public void updateMedicine() {
+    public void updateMedicine(Medicine newMedicine) {
         // delete the current medicine and insert the new one
     }
 
