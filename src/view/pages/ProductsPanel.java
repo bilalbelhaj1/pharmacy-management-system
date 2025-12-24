@@ -28,34 +28,68 @@ public class ProductsPanel extends JPanel implements ActionListener {
         this.setLayout(new BorderLayout());
         try {
             medicines = mc.getAllMedicines();
-            String[] columns = {"ID", "name", "form", "Price", "Stock", "Expiration Date", "Actions"};
-            Object[][] data = new Object[medicines.size()][7];
+            String[] columns = {"ID", "name", "form", "Price", "Stock", "Expiration Date"};
+            DefaultTableModel model = new DefaultTableModel(columns, 0) {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
 
             int i =0;
             for (Medicine medicine : medicines) {
-                data[i][0] = medicine.id() + "";
-                data[i][1] = medicine.name();
-                data[i][2] = medicine.form();
-                data[i][3] = medicine.sellePrice() + "";
-                data[i][4] = medicine.stock() + "";
-                data[i][5] = medicine.expiration_date() + "";
-                data[i][6] = new Button("Hello");
-                i++;
+                model.addRow(new Object[]{
+                        medicine.id(),
+                        medicine.name(),
+                        medicine.form(),
+                        medicine.sellePrice(),
+                        medicine.stock(),
+                        medicine.expiration_date()
+                });
             }
             // Header
             JPanel headerPanel = new JPanel(new BorderLayout());
             headerPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
             JLabel label = new JLabel("All Medicines");
+
+            JPanel buttonsPanel = new JPanel(new GridLayout(1,3));
             exportButton = new Button("Export List");
             exportButton.setBackground(Color.green);
             exportButton.setFont(new Font("Segoe UI", Font.PLAIN, 19));
             exportButton.setForeground(Color.WHITE);
             exportButton.addActionListener(this);
             headerPanel.add(label, BorderLayout.WEST);
-            headerPanel.add(exportButton, BorderLayout.EAST);
+
+            // delete update buttons
+            JButton updateButton = new JButton("Update");
+            JButton deleteButton = new JButton("Delete");
+
+            updateButton.addChangeListener(e -> {
+                int row = table.getSelectedRow();
+                if (row == -1) {
+                    JOptionPane.showMessageDialog(this, "Select a row first");
+                }
+                int id = (Integer) model.getValueAt(row, 0);
+                System.out.println(id);
+            });
+
+            deleteButton.addActionListener(e -> {
+                int row = table.getSelectedRow();
+                if(row == -1) {
+                    JOptionPane.showMessageDialog(this, "Select a medicine to delete");
+                }
+                int id = (Integer) model.getValueAt(row, 0);
+                System.out.println(id);
+            });
+
+            buttonsPanel.add(exportButton);
+            buttonsPanel.add(updateButton);
+            buttonsPanel.add(deleteButton);
+
+            headerPanel.add(buttonsPanel, BorderLayout.EAST);
 
             // Table
-            table = new JTable(data, columns);
+            table = new JTable(model);
             table.setShowGrid(true);
             table.setShowVerticalLines(true);
             table.setFillsViewportHeight(true);
