@@ -32,4 +32,13 @@ public class MedicineController {
     public void deleteMedicine(int id) throws SQLException {
         dao.deleteMedicine(id);
     }
+    public Medicine updateMedicine(Medicine medicine) {
+        try {
+            dao.updateMedicine(medicine);
+            return medicine;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

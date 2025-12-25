@@ -88,8 +88,21 @@ public class MedicineDao {
         int i = stm.executeUpdate();
     }
 
-    public void updateMedicine(Medicine newMedicine) {
-        // delete the current medicine and insert the new one
+    public void updateMedicine(Medicine newMedicine) throws SQLException {
+        String sql = "UPDATE medicine SET name=?, sell_price=?, purchase_price=?, description=?, form=?, stock=?, expiration_date=? WHERE id =? ";
+        PreparedStatement stm = conn.prepareStatement(sql);
+
+        stm.setString(1, newMedicine.name());
+        stm.setBigDecimal(2, newMedicine.sellPrice());
+        stm.setBigDecimal(3, newMedicine.purchasePrice());
+        stm.setString(4, newMedicine.description());
+        stm.setString(5, newMedicine.form());
+        stm.setInt(6, newMedicine.stock());
+        Date exDate = Date.valueOf(newMedicine.expiration_date());
+        stm.setDate(7, exDate);
+        stm.setInt(8, newMedicine.id());
+
+        int i = stm.executeUpdate();
     }
 
     public List<Medicine> getLowStockMedicines() throws SQLException {
