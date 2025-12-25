@@ -70,7 +70,7 @@ public class Dashboard extends JFrame {
         leftBar.add(reportsButton);
         leftBar.add(usersButton);
 
-        // Right Sidebar (Shortcuts / Quick Actions)
+        // Right Sidebar
         rightBar = new JPanel(new GridLayout(5,1,10,10));
         rightBar.setBackground(new Color(236, 240, 241));
         rightBar.setBorder(new EmptyBorder(10,10,10,10));
