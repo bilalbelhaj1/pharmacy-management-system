@@ -60,6 +60,7 @@ public class Dashboard extends JFrame {
         suppliersButton.addActionListener(e -> showPanel(new SuppliersPanel()));
 
         Button reportsButton = new Button("Reports");
+        reportsButton.addActionListener(e-> new MedicineSelector((JFrame) Dashboard.this));
         Button usersButton = new Button("Users");
 
         leftBar.add(productsButton);
