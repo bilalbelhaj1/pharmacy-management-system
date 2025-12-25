@@ -6,6 +6,7 @@ import model.Medicine;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,8 +18,13 @@ public class MedicineController {
         dao = new MedicineDao();
     }
 
-    public List<Medicine> getAllMedicines() throws SQLException {
-        return dao.getAll();
+    public List<Medicine> getAllMedicines(){
+        try {
+            return dao.getAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
 
     public Medicine getById(int id) throws SQLException {

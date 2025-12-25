@@ -15,6 +15,7 @@ public class Dashboard extends JFrame {
     private JPanel leftBar, rightBar, searchBar, mainPanel, footer;
 
     public Dashboard() {
+        this.
         setTitle("Pharmacy Management System");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());

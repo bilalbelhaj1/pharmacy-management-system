@@ -29,9 +29,8 @@ public class ProductsPanel extends JPanel implements ActionListener {
         this.setLayout(new BorderLayout(10,10)); // add spacing
         this.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         this.setBackground(new Color(248,249,250)); // light gray background
-
-        try {
-            medicines = mc.getAllMedicines();
+        medicines = mc.getAllMedicines();
+        if (!medicines.isEmpty()) {
             String[] columns = {"ID", "name", "form", "Price", "Stock", "Expiration Date"};
             DefaultTableModel model = new DefaultTableModel(columns, 0) {
                 @Override
@@ -53,25 +52,25 @@ public class ProductsPanel extends JPanel implements ActionListener {
 
             // Header
             JPanel headerPanel = new JPanel(new BorderLayout());
-            headerPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+            headerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
             headerPanel.setBackground(Color.WHITE);
 
             JLabel label = new JLabel("All Medicines");
             label.setFont(new Font("Segoe UI", Font.BOLD, 20));
-            label.setForeground(new Color(33,37,41));
+            label.setForeground(new Color(33, 37, 41));
 
             // Buttons panel
-            JPanel buttonsPanel = new JPanel(new GridLayout(1,3,10,0));
+            JPanel buttonsPanel = new JPanel(new GridLayout(1, 3, 10, 0));
             buttonsPanel.setBackground(Color.WHITE);
 
             exportButton = new JButton("Export List");
-            styleButton(exportButton, new Color(13,110,253));
+            styleButton(exportButton, new Color(13, 110, 253));
 
             JButton updateButton = new JButton("Update");
-            styleButton(updateButton, new Color(40,167,69));
+            styleButton(updateButton, new Color(40, 167, 69));
 
             JButton deleteButton = new JButton("Delete");
-            styleButton(deleteButton, new Color(220,53,69));
+            styleButton(deleteButton, new Color(220, 53, 69));
 
             exportButton.addActionListener(this);
 
@@ -96,10 +95,8 @@ public class ProductsPanel extends JPanel implements ActionListener {
 
             this.add(pane, BorderLayout.CENTER);
             this.add(headerPanel, BorderLayout.NORTH);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Error");
+        } else {
+            this.add(new JLabel("It seems Like there is no medicines!"));
         }
     }
 
