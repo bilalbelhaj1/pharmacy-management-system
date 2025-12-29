@@ -45,10 +45,10 @@ public class Dashboard extends JFrame {
         leftBar.setBackground(new Color(34, 49, 63));
         leftBar.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        Button productsButton = new Button("Products");
+        Button productsButton = new Button("Medicines");
         productsButton.addActionListener(e -> showPanel(new ProductsPanel()));
 
-        Button addProductButton = new Button("Add Product");
+        Button addProductButton = new Button("Add Medicine");
         addProductButton.addActionListener(e -> new AddMedicine(Dashboard.this));
 
         Button salesButton = new Button("Sales");
@@ -61,7 +61,6 @@ public class Dashboard extends JFrame {
         suppliersButton.addActionListener(e -> showPanel(new SuppliersPanel()));
 
         Button reportsButton = new Button("Reports");
-        reportsButton.addActionListener(e-> new MedicineSelector((JFrame) Dashboard.this));
         Button usersButton = new Button("Users");
 
         leftBar.add(productsButton);
@@ -77,18 +76,21 @@ public class Dashboard extends JFrame {
         rightBar.setBackground(new Color(236, 240, 241));
         rightBar.setBorder(new EmptyBorder(10,10,10,10));
 
-        String[] rightButtons = {
-                "Quick Sale", "Quick Purchase", "Stock Alert", "Expired Medicines", "Settings"
-        };
+        // right sidebar buttons
 
-        for (String text : rightButtons) {
-            JButton btn = new JButton(text);
-            btn.setBackground(new Color(41, 128, 185));
-            btn.setForeground(Color.WHITE);
-            btn.setFocusPainted(false);
-            btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
-            rightBar.add(btn);
-        }
+        JButton saleButton = createButton("Quick Sale");
+        saleButton.addActionListener(e -> new MedicineSelector((JFrame) Dashboard.this));
+
+        JButton purchaseButton = createButton("Quick Purchase");
+        JButton alertButton = createButton("Stock Alert");
+        JButton expiredButton = createButton("Expired Medicines");
+        JButton settingsButton = createButton("Settings");
+
+        rightBar.add(saleButton);
+        rightBar.add(purchaseButton);
+        rightBar.add(alertButton);
+        rightBar.add(expiredButton);
+        rightBar.add(settingsButton);
 
         // Main Panel
         mainPanel = new JPanel();
@@ -119,6 +121,15 @@ public class Dashboard extends JFrame {
         mainPanel.add(panel);
         mainPanel.revalidate();
         mainPanel.repaint();
+    }
+
+    private JButton createButton(String text) {
+        JButton btn = new JButton(text);
+        btn.setBackground(new Color(41, 128, 185));
+        btn.setForeground(Color.WHITE);
+        btn.setFocusPainted(false);
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        return btn;
     }
 
     public static void main(String[] args) {
