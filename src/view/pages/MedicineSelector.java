@@ -8,7 +8,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 
 public class MedicineSelector extends JFrame {
@@ -16,7 +16,7 @@ public class MedicineSelector extends JFrame {
     private final Color BACKGROUND_COLOR = Color.WHITE;
     private final Color CARD_BG = new Color(248, 249, 250);
     private final Color TEXT_COLOR = new Color(44, 62, 80);
-    private List<SaleItem> selectedItems = new ArrayList<>();
+    private Map<Integer, SaleItem> selectedItems = new HashMap<>();
     private List<MedicineCard> cards = new ArrayList<>();
     private List<Medicine> medicines = new ArrayList<>();
     JFrame parent;
@@ -54,7 +54,9 @@ public class MedicineSelector extends JFrame {
                 MedicineCard card = new MedicineCard(
                         medicine.name(),
                         medicine.sellPrice(),
-                        medicine.stock()
+                        medicine.stock(),
+                        0,
+                        medicine.id()
                 );
                 cards.add(card);
                 gridPanel.add(card);
@@ -79,7 +81,13 @@ public class MedicineSelector extends JFrame {
             nextButton.setFont(new Font("SansSerif", Font.BOLD, 14));
             nextButton.setPreferredSize(new Dimension(140, 40));
             nextButton.setForeground(new Color(236, 240, 241));
-
+            nextButton.addActionListener(e-> {
+                Collection<SaleItem> list = selectedItems.values();
+                List<SaleItem> items = new ArrayList<>(list);
+                for (SaleItem item : items) {
+                    System.out.println(item.getMedicineId() + " " + item.getQuantity() + " " + item.getPrice());
+                }
+            });
             cancelButton.setFont(new Font("SansSerif", Font.BOLD, 14));
             cancelButton.setPreferredSize(new Dimension(140, 40));
             cancelButton.addActionListener(e -> cancelSale());
@@ -109,11 +117,12 @@ public class MedicineSelector extends JFrame {
         for (MedicineCard card : cards) {
             if (card.isSelected()) {
                 total = total.add(card.getLineTotal());
-                selectedItems.add(new SaleItem(
-                        1,
-                        1,
-                        total
-                ));
+                if (!selectedItems.containsKey(card.getId())) {
+                    selectedItems.put(card.getId(), new SaleItem(card.getId(), 0, BigDecimal.ZERO));
+                }
+                SaleItem item = selectedItems.get(card.getId());
+                item.setPrice(card.getLineTotal());
+                item.setQuantity(card.getQuantity());
             }
         }
 
@@ -131,10 +140,13 @@ public class MedicineSelector extends JFrame {
         private JSpinner quantitySpinner;
         private JLabel lineTotalLabel;
         private BigDecimal price;
+        private int quantity;
+        private int id;
 
-        public MedicineCard(String name, BigDecimal price, int stock) {
+        public MedicineCard(String name, BigDecimal price, int stock, int quantity, int id) {
             this.price = price;
-
+            this.id = id;
+            this.quantity = quantity;
             setLayout(new BorderLayout(10, 0));
             setBackground(CARD_BG);
             setBorder(BorderFactory.createCompoundBorder(
@@ -196,6 +208,7 @@ public class MedicineSelector extends JFrame {
                 return;
             }
             int qty = (int) quantitySpinner.getValue();
+            this.quantity = qty;
             BigDecimal total = price.multiply(BigDecimal.valueOf(qty));
             lineTotalLabel.setText(String.format("$%.2f", total));
         }
@@ -207,6 +220,14 @@ public class MedicineSelector extends JFrame {
         public BigDecimal getLineTotal() {
             int qty = (int) quantitySpinner.getValue();
             return price.multiply(BigDecimal.valueOf(qty));
+        }
+
+        public int getQuantity() {
+            return this.quantity;
+        }
+
+        public int getId() {
+            return this.id;
         }
     }
 }
