@@ -10,7 +10,6 @@ import java.util.List;
  * @author $(bilal belhaj)
  **/
 
-
 public class SaleDAO {
     private Connection conn;
     public SaleDAO() {
@@ -23,37 +22,52 @@ public class SaleDAO {
     }
 
     // create sale
-
     public void createSale(Sale sale, List<SaleItem> items) throws SQLException {
-        // create a sale row
-        PreparedStatement stm1 = conn.prepareStatement("INSERT INTO sale(date, total, status) VALUES (?,?,?)");
-        Statement stm2 = conn.createStatement();
-        PreparedStatement stm3 = conn.prepareStatement("INSERT INTO sale_item(sale_id, medicine_id, quantity, price) VALUES (?,?,?,?)");
-        stm1.setDate(1, Date.valueOf(sale.getDate()));
-        stm1.setBigDecimal(2, sale.getTotal());
-        stm1.setString(3, sale.getStatus().toString());
+        String saleSql = "INSERT INTO sale(date, total, status) VALUES (?,?,?)";
+        String itemSql = "INSERT INTO sale_item(sale_id, medicine_id, quantity, price) VALUES (?,?,?,?)";
+        String decreaseStockSql = "UPDATE medicine SET stock = stock - ? WHERE id = ?";
+        conn.setAutoCommit(false);
 
-        // insert sale
-        stm1.executeUpdate();
+        try (
+                PreparedStatement saleStmt = conn.prepareStatement(
+                        saleSql, Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement itemStmt = conn.prepareStatement(itemSql);
+                PreparedStatement decreaseStockStmt = conn.prepareStatement(decreaseStockSql);
+        ) {
+            // Insert sale
+            saleStmt.setDate(1, Date.valueOf(sale.getDate()));
+            saleStmt.setBigDecimal(2, sale.getTotal());
+            saleStmt.setString(3, sale.getStatus().toString());
+            saleStmt.executeUpdate();
 
-        // get its id
-        ResultSet res = stm2.executeQuery("SELECT id FROM sale ORDER BY id DESC LIMIT 1");
-        int id = 0;
-        if (res.next()) {
-            id = res.getInt("id");
-        }
-
-        // to insert its items
-        if(id > 0) {
-            for (SaleItem item : items) {
-                stm3.setInt(1, id);
-                stm3.setInt(2, item.getMedicineId());
-                stm3.setInt(3, item.getQuantity());
-                stm3.setBigDecimal(4, item.getPrice());
-                stm3.executeUpdate();
+            // Get sale ID
+            ResultSet rs = saleStmt.getGeneratedKeys();
+            int saleId;
+            if (!rs.next()) {
+                throw new SQLException("Failed to retrieve sale ID");
             }
-        }
+            saleId = rs.getInt(1);
 
+            // Insert items
+            for (SaleItem item : items) {
+                itemStmt.setInt(1, saleId);
+                itemStmt.setInt(2, item.getMedicineId());
+                itemStmt.setInt(3, item.getQuantity());
+                itemStmt.setBigDecimal(4, item.getPrice());
+                itemStmt.executeUpdate();
+                decreaseStockStmt.setInt(1, item.getQuantity());
+                decreaseStockStmt.setInt(2, item.getMedicineId());
+                decreaseStockStmt.executeUpdate();
+            }
+
+            conn.commit();
+        } catch (SQLException e) {
+            conn.rollback();
+            throw e;
+        } finally {
+            conn.setAutoCommit(true);
+        }
     }
+
 
 }

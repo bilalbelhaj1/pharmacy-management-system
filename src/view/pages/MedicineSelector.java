@@ -1,7 +1,9 @@
 package view.pages;
 
 import controller.MedicineController;
+import controller.SaleController;
 import model.Medicine;
+import model.Sale;
 import model.SaleItem;
 
 import javax.swing.*;
@@ -21,7 +23,6 @@ public class MedicineSelector extends JFrame {
     private List<Medicine> medicines = new ArrayList<>();
     JFrame parent;
     private MedicineController mc;
-
     public MedicineSelector(JFrame parent) {
         this.parent = parent;
         this.mc = new MedicineController();
@@ -81,13 +82,7 @@ public class MedicineSelector extends JFrame {
             nextButton.setFont(new Font("SansSerif", Font.BOLD, 14));
             nextButton.setPreferredSize(new Dimension(140, 40));
             nextButton.setForeground(new Color(236, 240, 241));
-            nextButton.addActionListener(e-> {
-                Collection<SaleItem> list = selectedItems.values();
-                List<SaleItem> items = new ArrayList<>(list);
-                for (SaleItem item : items) {
-                    System.out.println(item.getMedicineId() + " " + item.getQuantity() + " " + item.getPrice());
-                }
-            });
+            nextButton.addActionListener(e-> confirmSale());
             cancelButton.setFont(new Font("SansSerif", Font.BOLD, 14));
             cancelButton.setPreferredSize(new Dimension(140, 40));
             cancelButton.addActionListener(e -> cancelSale());
@@ -132,6 +127,49 @@ public class MedicineSelector extends JFrame {
     // cancel sale
     private void cancelSale() {
         this.dispose();
+    }
+
+    private void confirmSale() {
+        SaleController sc = new SaleController();
+        Collection<SaleItem> list = selectedItems.values();
+        List<SaleItem> items = new ArrayList<>(list);
+        if(items.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please Select at least one item to confirm the sale", "Select item", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (sc.createSale(items)) {
+
+            JPanel panel = new JPanel(new BorderLayout(10, 10));
+            panel.setBorder(new EmptyBorder(15, 15, 15, 15));
+
+            JLabel icon = new JLabel(UIManager.getIcon("OptionPane.informationIcon"));
+            panel.add(icon, BorderLayout.WEST);
+
+            JLabel message = new JLabel(
+                    "<html><b>Sale completed successfully!</b><br>" +
+                            "The sale has been saved and inventory updated.</html>"
+            );
+            message.setFont(new Font("SansSerif", Font.PLAIN, 14));
+            panel.add(message, BorderLayout.CENTER);
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    panel,
+                    "Sale Confirmed",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+            this.dispose(); // close selector after success
+
+        } else {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Something went wrong could not confirm the sale",
+                    "Error Confirming the sale",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
 
     private class MedicineCard extends JPanel {
