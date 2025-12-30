@@ -13,7 +13,10 @@ import javax.swing.border.EmptyBorder;
  * Author: Bilal Belhaj
  */
 public class Dashboard extends JFrame {
-    private JPanel leftBar, rightBar, searchBar, mainPanel, footer;
+    private JPanel leftBar;
+    private JPanel rightBar;
+    private JPanel mainPanel;
+    private JPanel footer;
     public Dashboard() {
         this.setTitle("Pharmacy Management System");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -22,7 +25,7 @@ public class Dashboard extends JFrame {
         this.setLocationRelativeTo(null);
 
         // Search Bar
-        searchBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        JPanel searchBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         searchBar.setBackground(new Color(240, 240, 240));
         searchBar.setBorder(new EmptyBorder(5, 20, 5, 20));
 
