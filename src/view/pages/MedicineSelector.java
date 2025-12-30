@@ -2,90 +2,101 @@ package view.pages;
 
 import controller.MedicineController;
 import model.Medicine;
+import model.SaleItem;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MedicineSelector extends JFrame {
-
     private JLabel totalLabel;
     private final Color BACKGROUND_COLOR = Color.WHITE;
     private final Color CARD_BG = new Color(248, 249, 250);
     private final Color TEXT_COLOR = new Color(44, 62, 80);
-
+    private List<SaleItem> selectedItems = new ArrayList<>();
     private List<MedicineCard> cards = new ArrayList<>();
-
+    private List<Medicine> medicines = new ArrayList<>();
     JFrame parent;
+    private MedicineController mc;
 
     public MedicineSelector(JFrame parent) {
         this.parent = parent;
+        this.mc = new MedicineController();
         initPanel();
     }
 
     private void initPanel() {
-        setTitle("Select Medicines");
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setLayout(new BorderLayout());
-        getContentPane().setBackground(BACKGROUND_COLOR);
+        medicines = mc.getAllMedicines();
+        if (!medicines.isEmpty()) {
+            setTitle("Select Medicines");
+            setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+            setLayout(new BorderLayout());
+            getContentPane().setBackground(BACKGROUND_COLOR);
 
-        // Header
-        JLabel headerLabel = new JLabel("Select Medicines for Sale", SwingConstants.CENTER);
-        headerLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
-        headerLabel.setForeground(TEXT_COLOR);
-        headerLabel.setBorder(new EmptyBorder(20, 0, 10, 0));
-        add(headerLabel, BorderLayout.NORTH);
+            // Header
+            JLabel headerLabel = new JLabel("Select Medicines for Sale", SwingConstants.CENTER);
+            headerLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
+            headerLabel.setForeground(TEXT_COLOR);
+            headerLabel.setBorder(new EmptyBorder(20, 0, 10, 0));
+            add(headerLabel, BorderLayout.NORTH);
 
-        // Cards Grid
-        JPanel gridPanel = new JPanel(new GridLayout(0, 2, 15, 15));
-        gridPanel.setBackground(BACKGROUND_COLOR);
-        gridPanel.setBorder(new EmptyBorder(15, 20, 15, 20));
+            // Cards Grid
+            JPanel gridPanel = new JPanel(new GridLayout(0, 2, 15, 15));
+            gridPanel.setBackground(BACKGROUND_COLOR);
+            gridPanel.setBorder(new EmptyBorder(15, 20, 15, 20));
 
-        //
-        for (int i = 1; i <= 20; i++) {
-            MedicineCard card = new MedicineCard(
-                    "Medicine " + i,
-                    10 + i,
-                    50
-            );
-            cards.add(card);
-            gridPanel.add(card);
+            // display available medicines
+
+            for (Medicine medicine : medicines) {
+                MedicineCard card = new MedicineCard(
+                        medicine.name(),
+                        medicine.sellPrice(),
+                        medicine.stock()
+                );
+                cards.add(card);
+                gridPanel.add(card);
+            }
+
+            JScrollPane scrollPane = new JScrollPane(gridPanel);
+            scrollPane.setBorder(null);
+            add(scrollPane, BorderLayout.CENTER);
+
+            // Action Buttons and total
+            JPanel footer = new JPanel(new BorderLayout());
+            footer.setBorder(new EmptyBorder(10, 20, 10, 20));
+            footer.setBackground(BACKGROUND_COLOR);
+
+            totalLabel = new JLabel("Total: $0.00");
+            totalLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
+            totalLabel.setForeground(new Color(40, 167, 69));
+
+            JButton nextButton = new JButton("Confirm Sale");
+            nextButton.setBackground(new Color(40, 167, 69));
+            JButton cancelButton = new JButton("Cancel");
+            nextButton.setFont(new Font("SansSerif", Font.BOLD, 14));
+            nextButton.setPreferredSize(new Dimension(140, 40));
+            nextButton.setForeground(new Color(236, 240, 241));
+
+            cancelButton.setFont(new Font("SansSerif", Font.BOLD, 14));
+            cancelButton.setPreferredSize(new Dimension(140, 40));
+            cancelButton.addActionListener(e -> cancelSale());
+
+            footer.add(totalLabel, BorderLayout.WEST);
+            JPanel buttonsPanel = new JPanel(new GridLayout(1, 2));
+            buttonsPanel.add(cancelButton);
+            buttonsPanel.add(nextButton);
+            footer.add(buttonsPanel, BorderLayout.EAST);
+
+            add(footer, BorderLayout.SOUTH);
+        } else {
+            // no medicines message
+            JPanel noMedicineMessage = new JPanel();
+            noMedicineMessage.add(new JLabel("It seems like there is no medicines!!"));
+            add(noMedicineMessage);
         }
-
-        JScrollPane scrollPane = new JScrollPane(gridPanel);
-        scrollPane.setBorder(null);
-        add(scrollPane, BorderLayout.CENTER);
-
-        // Action Buttons and total
-        JPanel footer = new JPanel(new BorderLayout());
-        footer.setBorder(new EmptyBorder(10, 20, 10, 20));
-        footer.setBackground(BACKGROUND_COLOR);
-
-        totalLabel = new JLabel("Total: $0.00");
-        totalLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
-        totalLabel.setForeground(new Color(40, 167, 69));
-
-        JButton nextButton = new JButton("Confirm Sale");
-        nextButton.setBackground(new Color(40, 167, 69));
-        JButton cancelButton = new JButton("Cancel");
-        nextButton.setFont(new Font("SansSerif", Font.BOLD, 14));
-        nextButton.setPreferredSize(new Dimension(140, 40));
-        nextButton.setForeground(new Color(236, 240, 241));
-
-        cancelButton.setFont(new Font("SansSerif", Font.BOLD, 14));
-        cancelButton.setPreferredSize(new Dimension(140, 40));
-        cancelButton.addActionListener(e -> cancelSale());
-
-        footer.add(totalLabel, BorderLayout.WEST);
-        JPanel buttonsPanel = new JPanel(new GridLayout(1, 2));
-        buttonsPanel.add(cancelButton);
-        buttonsPanel.add(nextButton);
-        footer.add(buttonsPanel, BorderLayout.EAST);
-
-        add(footer, BorderLayout.SOUTH);
-
         setSize(900, 650);
         setLocationRelativeTo(parent);
         setVisible(true);
@@ -93,11 +104,16 @@ public class MedicineSelector extends JFrame {
 
     // update the sale total
     private void updateTotal() {
-        double total = 0;
+        BigDecimal total = BigDecimal.ZERO;
 
         for (MedicineCard card : cards) {
             if (card.isSelected()) {
-                total += card.getLineTotal();
+                total = total.add(card.getLineTotal());
+                selectedItems.add(new SaleItem(
+                        1,
+                        1,
+                        total
+                ));
             }
         }
 
@@ -114,9 +130,9 @@ public class MedicineSelector extends JFrame {
         private JCheckBox selectBox;
         private JSpinner quantitySpinner;
         private JLabel lineTotalLabel;
-        private double price;
+        private BigDecimal price;
 
-        public MedicineCard(String name, double price, int stock) {
+        public MedicineCard(String name, BigDecimal price, int stock) {
             this.price = price;
 
             setLayout(new BorderLayout(10, 0));
@@ -180,7 +196,7 @@ public class MedicineSelector extends JFrame {
                 return;
             }
             int qty = (int) quantitySpinner.getValue();
-            double total = qty * price;
+            BigDecimal total = price.multiply(BigDecimal.valueOf(qty));
             lineTotalLabel.setText(String.format("$%.2f", total));
         }
 
@@ -188,9 +204,9 @@ public class MedicineSelector extends JFrame {
             return selectBox.isSelected();
         }
 
-        public double getLineTotal() {
+        public BigDecimal getLineTotal() {
             int qty = (int) quantitySpinner.getValue();
-            return qty * price;
+            return price.multiply(BigDecimal.valueOf(qty));
         }
     }
 }

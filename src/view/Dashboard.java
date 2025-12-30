@@ -1,5 +1,6 @@
 package view;
 
+import controller.MedicineController;
 import view.common.Button;
 import view.pages.*;
 
@@ -13,14 +14,12 @@ import javax.swing.border.EmptyBorder;
  */
 public class Dashboard extends JFrame {
     private JPanel leftBar, rightBar, searchBar, mainPanel, footer;
-
     public Dashboard() {
-        this.
-        setTitle("Pharmacy Management System");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
-        setSize(1400, 700);
-        setLocationRelativeTo(null);
+        this.setTitle("Pharmacy Management System");
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setLayout(new BorderLayout());
+        this.setSize(1400, 700);
+        this.setLocationRelativeTo(null);
 
         // Search Bar
         searchBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
