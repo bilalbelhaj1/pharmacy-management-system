@@ -31,19 +31,19 @@ public class MedicineSelector extends JFrame {
         setLayout(new BorderLayout());
         getContentPane().setBackground(BACKGROUND_COLOR);
 
-        /* ---------- HEADER ---------- */
+        // Header
         JLabel headerLabel = new JLabel("Select Medicines for Sale", SwingConstants.CENTER);
         headerLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
         headerLabel.setForeground(TEXT_COLOR);
         headerLabel.setBorder(new EmptyBorder(20, 0, 10, 0));
         add(headerLabel, BorderLayout.NORTH);
 
-        /* ---------- GRID ---------- */
+        // Cards Grid
         JPanel gridPanel = new JPanel(new GridLayout(0, 2, 15, 15));
         gridPanel.setBackground(BACKGROUND_COLOR);
         gridPanel.setBorder(new EmptyBorder(15, 20, 15, 20));
 
-        // DEMO DATA (replace with real medicines later)
+        //
         for (int i = 1; i <= 20; i++) {
             MedicineCard card = new MedicineCard(
                     "Medicine " + i,
@@ -58,7 +58,7 @@ public class MedicineSelector extends JFrame {
         scrollPane.setBorder(null);
         add(scrollPane, BorderLayout.CENTER);
 
-        /* ---------- FOOTER ---------- */
+        // Action Buttons and total
         JPanel footer = new JPanel(new BorderLayout());
         footer.setBorder(new EmptyBorder(10, 20, 10, 20));
         footer.setBackground(BACKGROUND_COLOR);
@@ -68,11 +68,20 @@ public class MedicineSelector extends JFrame {
         totalLabel.setForeground(new Color(40, 167, 69));
 
         JButton nextButton = new JButton("Confirm Sale");
+        nextButton.setBackground(new Color(40, 167, 69));
+        JButton cancelButton = new JButton("Cancel");
         nextButton.setFont(new Font("SansSerif", Font.BOLD, 14));
         nextButton.setPreferredSize(new Dimension(140, 40));
+        nextButton.setForeground(new Color(236, 240, 241));
+
+        cancelButton.setFont(new Font("SansSerif", Font.BOLD, 14));
+        cancelButton.setPreferredSize(new Dimension(140, 40));
 
         footer.add(totalLabel, BorderLayout.WEST);
-        footer.add(nextButton, BorderLayout.EAST);
+        JPanel buttonsPanel = new JPanel(new GridLayout(1, 2));
+        buttonsPanel.add(cancelButton);
+        buttonsPanel.add(nextButton);
+        footer.add(buttonsPanel, BorderLayout.EAST);
 
         add(footer, BorderLayout.SOUTH);
 
