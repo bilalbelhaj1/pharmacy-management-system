@@ -76,6 +76,7 @@ public class MedicineSelector extends JFrame {
 
         cancelButton.setFont(new Font("SansSerif", Font.BOLD, 14));
         cancelButton.setPreferredSize(new Dimension(140, 40));
+        cancelButton.addActionListener(e -> cancelSale());
 
         footer.add(totalLabel, BorderLayout.WEST);
         JPanel buttonsPanel = new JPanel(new GridLayout(1, 2));
@@ -90,7 +91,7 @@ public class MedicineSelector extends JFrame {
         setVisible(true);
     }
 
-    /* ---------- TOTAL CALCULATION ---------- */
+    // update the sale total
     private void updateTotal() {
         double total = 0;
 
@@ -103,7 +104,10 @@ public class MedicineSelector extends JFrame {
         totalLabel.setText(String.format("Total: $%.2f", total));
     }
 
-    /* ========================================================= */
+    // cancel sale
+    private void cancelSale() {
+        this.dispose();
+    }
 
     private class MedicineCard extends JPanel {
 
@@ -122,11 +126,11 @@ public class MedicineSelector extends JFrame {
                     new EmptyBorder(10, 10, 10, 10)
             ));
 
-            /* LEFT */
+            // left
             selectBox = new JCheckBox();
             selectBox.setOpaque(false);
 
-            /* CENTER */
+            // center
             JPanel infoPanel = new JPanel(new GridLayout(2, 1));
             infoPanel.setOpaque(false);
 
@@ -139,7 +143,7 @@ public class MedicineSelector extends JFrame {
             infoPanel.add(nameLabel);
             infoPanel.add(detailsLabel);
 
-            /* RIGHT */
+            // right
             JPanel rightPanel = new JPanel(new GridLayout(2, 1, 5, 5));
             rightPanel.setOpaque(false);
 
@@ -156,13 +160,14 @@ public class MedicineSelector extends JFrame {
             add(infoPanel, BorderLayout.CENTER);
             add(rightPanel, BorderLayout.EAST);
 
-            /* ---------- EVENTS ---------- */
+            // event for checkbox
             selectBox.addActionListener(e -> {
                 quantitySpinner.setEnabled(selectBox.isSelected());
                 updateLineTotal();
                 updateTotal();
             });
 
+            // change event for spinner
             quantitySpinner.addChangeListener(e -> {
                 updateLineTotal();
                 updateTotal();
