@@ -2,6 +2,7 @@ package dao;
 
 import model.Sale;
 import model.SaleItem;
+import model.SaleStatus;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -68,6 +69,24 @@ public class SaleDAO {
         } finally {
             conn.setAutoCommit(true);
         }
+    }
+
+    public List<Sale> getSales() throws SQLException{
+        List<Sale> sales = new ArrayList<>();
+        String sql = "SELECT * FROM sale";
+        PreparedStatement stm = conn.prepareStatement(sql);
+        ResultSet res = stm.executeQuery();
+        while (res.next()) {
+            sales.add(
+                new Sale(
+                    res.getInt("id"),
+                    res.getDate("date").toLocalDate(),
+                    res.getBigDecimal("total"),
+                    SaleStatus.PAID
+                )
+            );
+        }
+        return sales;
     }
 
     public void deleteSale(int saleId) throws SQLException {

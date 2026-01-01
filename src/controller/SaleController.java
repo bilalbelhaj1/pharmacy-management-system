@@ -8,6 +8,7 @@ import model.SaleStatus;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,6 +32,16 @@ public class SaleController {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public List<Sale> getSales() {
+        List<Sale> sales = new ArrayList<>();
+        try {
+            sales = dao.getSales();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return sales;
     }
 
     public boolean deleteSale(int id) {
