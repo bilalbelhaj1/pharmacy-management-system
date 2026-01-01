@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
+import java.io.FileWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
@@ -33,7 +34,7 @@ public class SaleView extends JFrame {
 
     public void initSaleView() {
 
-        /* ===== Header ===== */
+        // frame header
         JLabel header = new JLabel("Sale #1 — 12/12/2024 at 12:12 PM", SwingConstants.CENTER);
         header.setFont(new Font("Segoe UI", Font.BOLD, 18));
         header.setForeground(TEXT_COLOR);
@@ -41,7 +42,7 @@ public class SaleView extends JFrame {
         header.setOpaque(true);
         header.setBackground(Color.WHITE);
 
-        /* ===== Content Header ===== */
+        // header content
         JPanel contentHeader = new JPanel(new BorderLayout());
         contentHeader.setBackground(Color.WHITE);
         contentHeader.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -56,11 +57,11 @@ public class SaleView extends JFrame {
         exportButton.setForeground(Color.WHITE);
         exportButton.setFocusPainted(false);
         exportButton.setBorder(new EmptyBorder(6, 14, 6, 14));
-
+        exportButton.addActionListener(e -> export());
         contentHeader.add(title, BorderLayout.WEST);
         contentHeader.add(exportButton, BorderLayout.EAST);
 
-        /* ===== Items ===== */
+        // items
         JPanel itemsPanel = new JPanel(new GridLayout(0, 1, 0, 10));
         itemsPanel.setBackground(BG_COLOR);
         itemsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -73,7 +74,7 @@ public class SaleView extends JFrame {
         scrollPane.setBorder(null);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
-        /* ===== Main ===== */
+        // Main panel
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(BG_COLOR);
         mainPanel.add(contentHeader, BorderLayout.NORTH);
@@ -110,7 +111,30 @@ public class SaleView extends JFrame {
         return label;
     }
 
-    public void export(File file) {
-        // intentionally empty
+    public void export() {
+        JFileChooser chooser = new JFileChooser();
+        int x = chooser.showSaveDialog(this);
+        System.out.println("x: " + x);
+        if (x == JFileChooser.APPROVE_OPTION) {
+            String name = chooser.getSelectedFile().getName();
+            String path = chooser.getSelectedFile().getParentFile().getPath();
+            System.out.println(path);
+            String file = path + "\\" + name + ".xlsx";
+            try{
+                File newFile = new File(file);
+                newFile.createNewFile();
+                FileWriter fileWriter = new FileWriter(newFile);
+
+                fileWriter.write("Name\tquantity\tprice(unit)\ttotal\t\n");
+
+                for (SaleItem item : items) {
+                    fileWriter.write(item.getName() + "\t" + item.getQuantity() + "\t" + item.getPrice() + "\t" + item.getTotal() + "\t\n");
+                }
+
+                fileWriter.close();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }
