@@ -4,6 +4,7 @@ import model.Sale;
 import model.SaleItem;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -69,5 +70,27 @@ public class SaleDAO {
         }
     }
 
+    public void deleteSale(int saleId) throws SQLException {
+        String deleteSql = "DELETE FROM sale WHERE id = ?";
+        PreparedStatement deleteStm = conn.prepareStatement(deleteSql);
+        deleteStm.setInt(1, saleId);
+        deleteStm.executeUpdate();
+    }
+
+    public List<SaleItem> getSaleItems(int saleId) throws SQLException {
+        List<SaleItem> items = new ArrayList<>();
+        String sql = "SELECT * FROM sale_item WHERE sale_id = ?";
+        PreparedStatement stm = conn.prepareStatement(sql);
+        stm.setInt(1, saleId);
+        ResultSet res = stm.executeQuery();
+        while (res.next()) {
+            items.add(new SaleItem(
+                    res.getInt("medicine_id"),
+                    res.getInt("quantity"),
+                    res.getBigDecimal("price")
+            ));
+        }
+        return items;
+    }
 
 }

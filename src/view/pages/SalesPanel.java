@@ -1,14 +1,22 @@
 package view.pages;
 
+import controller.SaleController;
+import model.SaleItem;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.List;
 
 /**
  * @author $(bilal belhaj)
  **/
 public class SalesPanel extends JPanel {
+    JTable table;
+    DefaultTableModel model;
+    private final SaleController sc;
     public SalesPanel() {
+        this.sc = new SaleController();
         this.setLayout(new BorderLayout(10, 10));
         this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         this.setBackground(new Color(248, 249, 250)); // light gray background
@@ -41,7 +49,10 @@ public class SalesPanel extends JPanel {
         buttonsPanel.setBackground(Color.WHITE);
 
         JButton viewButton = new JButton("View");
+        viewButton.addActionListener(e -> viewSale());
+
         JButton deleteButton = new JButton("Delete");
+        deleteButton.addActionListener(e -> deleteSale());
 
         styleButton(viewButton, new Color(13, 110, 253));
         styleButton(deleteButton, new Color(220, 53, 69));
@@ -54,7 +65,7 @@ public class SalesPanel extends JPanel {
 
         // table
         String[] columns = {"ID", "Total Medicines", "Total(price)", "Date", "Status"};
-        DefaultTableModel model = new DefaultTableModel(columns, 0){
+        model = new DefaultTableModel(columns, 0){
             @Override
             public boolean isCellEditable(int row,int column){ return false;}
         };
@@ -69,7 +80,7 @@ public class SalesPanel extends JPanel {
             });
         }
 
-        JTable table = new JTable(model);
+        table = new JTable(model);
         table.setFillsViewportHeight(true);
         table.setRowHeight(28);
         table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
@@ -80,6 +91,42 @@ public class SalesPanel extends JPanel {
         // main panel
         this.add(headerPanel, BorderLayout.NORTH);
         this.add(scrollPane, BorderLayout.CENTER);
+    }
+
+    private void deleteSale() {
+        int row = table.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this,"Please Select Sale to delete", "row not selected", JOptionPane.ERROR_MESSAGE);
+        } else {
+            int id = (int)model.getValueAt(row, 0);
+            int confirm = JOptionPane.showConfirmDialog(this, "Are you sure You want to delete this sale", "delete confirmation", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                if(sc.deleteSale(id)) {
+                    model.removeRow(row);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Could not delete this sale", "error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }
+
+
+    private void viewSale() {
+        // open a new frame contient the sale info with option to export (my next step)
+        int row = table.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this,"Please Select Sale to View the sale details", "row not selected", JOptionPane.ERROR_MESSAGE);
+        } else {
+            int id = (int) model.getValueAt(row, 0);
+            List<SaleItem> list = sc.getSaleItems(id);
+
+            for (SaleItem item: list) {
+                System.out.println(item.getMedicineId());
+                System.out.println(item.getQuantity());
+                System.out.println(item.getPrice());
+                System.out.println("******************************************");
+            }
+        }
     }
 
     private void styleButton(JButton btn, Color bg) {

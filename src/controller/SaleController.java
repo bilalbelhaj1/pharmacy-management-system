@@ -32,4 +32,22 @@ public class SaleController {
             return false;
         }
     }
+
+    public boolean deleteSale(int id) {
+        try {
+            dao.deleteSale(id);
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    public List<SaleItem> getSaleItems(int id) {
+        try {
+            return dao.getSaleItems(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Could not get items");
+        }
+    }
 }
