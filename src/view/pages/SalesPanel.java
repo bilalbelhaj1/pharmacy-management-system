@@ -126,7 +126,7 @@ public class SalesPanel extends JPanel {
         } else {
             int id = (int) model.getValueAt(row, 0);
             List<SaleItem> list = sc.getSaleItems(id);
-
+            new SaleView(this, list);
             for (SaleItem item: list) {
                 System.out.println(item.getMedicineId());
                 System.out.println(item.getQuantity());
