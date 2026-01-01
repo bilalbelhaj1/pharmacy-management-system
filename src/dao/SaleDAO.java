@@ -55,7 +55,7 @@ public class SaleDAO {
                 itemStmt.setInt(1, saleId);
                 itemStmt.setInt(2, item.getMedicineId());
                 itemStmt.setInt(3, item.getQuantity());
-                itemStmt.setBigDecimal(4, item.getPrice());
+                itemStmt.setBigDecimal(4, item.getTotal());
                 itemStmt.executeUpdate();
                 decreaseStockStmt.setInt(1, item.getQuantity());
                 decreaseStockStmt.setInt(2, item.getMedicineId());
@@ -98,7 +98,7 @@ public class SaleDAO {
 
     public List<SaleItem> getSaleItems(int saleId) throws SQLException {
         List<SaleItem> items = new ArrayList<>();
-        String sql = "SELECT * FROM sale_item WHERE sale_id = ?";
+        String sql = "SELECT m.id, m.name ,s.medicine_id, s.quantity, s.price as total, m.sell_price as price FROM sale_item as s JOIN medicine as m ON s.medicine_id = m.id WHERE sale_id = ?";
         PreparedStatement stm = conn.prepareStatement(sql);
         stm.setInt(1, saleId);
         ResultSet res = stm.executeQuery();
@@ -106,6 +106,8 @@ public class SaleDAO {
             items.add(new SaleItem(
                     res.getInt("medicine_id"),
                     res.getInt("quantity"),
+                    res.getBigDecimal("price"),
+                    res.getString("name"),
                     res.getBigDecimal("price")
             ));
         }

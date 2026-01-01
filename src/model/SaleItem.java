@@ -6,17 +6,29 @@ import java.math.BigDecimal;
  * @author $(bilal belhaj)
  **/
 public class SaleItem {
-    private BigDecimal price;
+    private BigDecimal total;
     private int quantity;
     private final int medicineId;
-    public SaleItem(int medicineId, int quantity, BigDecimal price) {
+    private String name;
+    private BigDecimal price;
+    public SaleItem(int medicineId, int quantity, BigDecimal total, String name, BigDecimal price) {
         this.medicineId = medicineId;
-        this.price = price;
+        this.total = total;
         this.quantity = quantity;
+        this.name = name;
+        this.price = price;
     }
 
-    public BigDecimal getPrice() {
-        return this.price;
+    public SaleItem(int medicineId, int quantity, BigDecimal total) {
+        this.medicineId = medicineId;
+        this.total = total;
+        this.quantity = quantity;
+        this.name = name;
+        this.price = price;
+    }
+
+    public BigDecimal getTotal() {
+        return this.total;
     }
 
     public int getQuantity() {
@@ -27,8 +39,12 @@ public class SaleItem {
         return this.medicineId;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public String getName() { return this.name; }
+
+    public BigDecimal getPrice() { return this.price; }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
     }
 
     public void setQuantity(int quantity) {

@@ -24,7 +24,7 @@ public class SaleController {
     public boolean createSale(List<SaleItem> items) {
         try {
             BigDecimal total = items.stream()
-                    .map(item -> item.getPrice())
+                    .map(item -> item.getTotal())
                     .reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
             dao.createSale(new Sale(LocalDate.now(), total, SaleStatus.PAID), items);
             return true;

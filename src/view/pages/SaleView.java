@@ -95,16 +95,10 @@ public class SaleView extends JFrame {
                 new EmptyBorder(10, 10, 10, 10)
         ));
 
-        panel.add(createLabel("Medicine ID: " + item.getMedicineId()));
+        panel.add(createLabel("Medicine Name: " + item.getName()));
         panel.add(createLabel("Quantity: " + item.getQuantity()));
-        panel.add(createLabel(
-                "Unit Price: " +
-                        item.getPrice().divide(
-                                BigDecimal.valueOf(item.getQuantity()),
-                                RoundingMode.HALF_UP
-                        )
-        ));
-        panel.add(createLabel("Total: " + item.getPrice()));
+        panel.add(createLabel("Unit Price: " + item.getPrice()));
+        panel.add(createLabel("Total: " + item.getTotal()));
 
         return panel;
     }

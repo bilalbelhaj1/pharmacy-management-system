@@ -116,7 +116,7 @@ public class MedicineSelector extends JFrame {
                     selectedItems.put(card.getId(), new SaleItem(card.getId(), 0, BigDecimal.ZERO));
                 }
                 SaleItem item = selectedItems.get(card.getId());
-                item.setPrice(card.getLineTotal());
+                item.setTotal(card.getLineTotal());
                 item.setQuantity(card.getQuantity());
             }
         }
