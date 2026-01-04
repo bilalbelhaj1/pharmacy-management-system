@@ -7,8 +7,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 
 /**

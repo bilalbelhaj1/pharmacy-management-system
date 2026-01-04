@@ -20,7 +20,7 @@ public class SalesPanel extends JPanel {
         this.sc = new SaleController();
         this.setLayout(new BorderLayout(10, 10));
         this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        this.setBackground(new Color(248, 249, 250)); // light gray background
+        this.setBackground(new Color(248, 249, 250));
         initSalesPanel();
     }
 
@@ -47,7 +47,7 @@ public class SalesPanel extends JPanel {
             filterPanel.add(filterCombo);
             filterPanel.add(label);
 
-            // Buttons panel (right)
+            // Buttons panel
             JPanel buttonsPanel = new JPanel(new GridLayout(1, 2, 10, 0));
             buttonsPanel.setBackground(Color.WHITE);
 
