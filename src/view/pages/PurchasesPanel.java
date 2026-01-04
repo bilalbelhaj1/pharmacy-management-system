@@ -1,6 +1,7 @@
 package view.pages;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 /**
@@ -49,6 +50,30 @@ public class PurchasesPanel extends JPanel {
         headerPanel.add(filterPanel, BorderLayout.WEST);
         headerPanel.add(buttonsPanel, BorderLayout.EAST);
 
+        // main table
+        String[] columns = {"#ID", "name", "date", "total", "something", "cool"};
+        String[][] data = new String[30][6];
+
+        for (int i = 0 ; i < 30; i++) {
+            data[i][0] = "1";
+            data[i][1] = "bilal";
+            data[i][2] = "12-12-2999";
+            data[i][3] = "2333";
+            data[i][4] = "yes";
+            data[i][5] = "No";
+        }
+        DefaultTableModel model = new DefaultTableModel(data, columns);
+        table = new JTable(model);
+        table.setFillsViewportHeight(true);
+        table.setRowHeight(28);
+        table.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+
+        JScrollPane pane = new JScrollPane(table);
+        pane.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200)));
+        JPanel tablePanel = new JPanel();
+        tablePanel.add(pane);
+
+        this.add(pane, BorderLayout.CENTER);
         this.add(headerPanel, BorderLayout.NORTH);
     }
 
