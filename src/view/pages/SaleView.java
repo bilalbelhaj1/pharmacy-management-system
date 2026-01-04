@@ -119,16 +119,17 @@ public class SaleView extends JFrame {
             String name = chooser.getSelectedFile().getName();
             String path = chooser.getSelectedFile().getParentFile().getPath();
             System.out.println(path);
-            String file = path + "\\" + name + ".xlsx";
+            String file = path + "\\" + name + ".xls";
             try{
                 File newFile = new File(file);
                 newFile.createNewFile();
                 FileWriter fileWriter = new FileWriter(newFile);
 
-                fileWriter.write("Name\tquantity\tprice(unit)\ttotal\t\n");
-
+                fileWriter.write("Name\tquantity\tprice(unit)\ttotal\t");
+                fileWriter.write("\n");
                 for (SaleItem item : items) {
-                    fileWriter.write(item.getName() + "\t" + item.getQuantity() + "\t" + item.getPrice() + "\t" + item.getTotal() + "\t\n");
+                    fileWriter.write(item.getName() + "\t" + item.getQuantity() + "\t" + item.getPrice() + "\t" + item.getTotal() + "\t");
+                    fileWriter.write("\n");
                 }
 
                 fileWriter.close();
