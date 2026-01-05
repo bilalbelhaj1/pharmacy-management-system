@@ -23,9 +23,9 @@ public class PurchasesPanel extends JPanel {
     }
     private void initPurchasePanel() {
 
-        List<Purchase> list = pc.getAll();
-        if (!list.isEmpty()) {
-            for (Purchase purchase : list) {
+        List<Purchase> purchases = pc.getAll();
+        if (!purchases.isEmpty()) {
+            for (Purchase purchase : purchases) {
                 System.out.println(purchase);
             }
         }
@@ -43,7 +43,7 @@ public class PurchasesPanel extends JPanel {
         JComboBox<String> filterCombo = new JComboBox<>(filters);
         styleComboBox(filterCombo);
 
-        JLabel label = new JLabel("Today's Sales");
+        JLabel label = new JLabel("Today's Purchases");
         label.setFont(new Font("Segoe UI", Font.BOLD, 18));
         label.setForeground(new Color(33, 37, 41));
 
@@ -65,18 +65,24 @@ public class PurchasesPanel extends JPanel {
         headerPanel.add(buttonsPanel, BorderLayout.EAST);
 
         // main table
-        String[] columns = {"#ID", "name", "date", "total", "something", "cool"};
+        String[] columns = {"#id", "date", "total", "Supplier Name", "Supplier Email", "Supplier Phone"};
         String[][] data = new String[30][6];
-
-        for (int i = 0 ; i < 30; i++) {
-            data[i][0] = "1";
-            data[i][1] = "bilal";
-            data[i][2] = "12-12-2999";
-            data[i][3] = "2333";
-            data[i][4] = "yes";
-            data[i][5] = "No";
+        DefaultTableModel model = new DefaultTableModel(columns, 0) {
+            @Override
+            public boolean isCellEditable(int row, int col) {
+                return false;
+            }
+        };
+        for (Purchase purchase : purchases) {
+            model.addRow(new Object[]{
+                    purchase.getId(),
+                    purchase.getDate(),
+                    purchase.getTotal() + "$",
+                    purchase.getSupplierName(),
+                    purchase.getSupplierEmail(),
+                    purchase.getSupplierPhone()
+            });
         }
-        DefaultTableModel model = new DefaultTableModel(data, columns);
         table = new JTable(model);
         table.setFillsViewportHeight(true);
         table.setRowHeight(28);

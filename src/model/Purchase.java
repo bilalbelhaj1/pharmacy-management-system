@@ -43,6 +43,17 @@ public class Purchase {
     public BigDecimal getTotal() {
         return this.total;
     }
+    public  String getSupplierName() {
+        return this.supplierName;
+    }
+
+    public String getSupplierEmail() {
+        return this.supplierEmail;
+    }
+
+    public String getSupplierPhone() {
+        return this.supplierPhone;
+    }
 
     @Override
     public String toString() {
