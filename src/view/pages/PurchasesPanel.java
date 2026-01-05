@@ -1,21 +1,35 @@
 package view.pages;
 
+import controller.PurchaseController;
+import model.Purchase;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.List;
 
 /**
  * @author $(bilal belhaj)
  **/
 public class PurchasesPanel extends JPanel {
-    JTable table;
+    private JTable table;
+    private final PurchaseController pc;
     public PurchasesPanel() {
+        this.pc = new PurchaseController();
         this.setLayout(new BorderLayout(10, 10));
         this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         this.setBackground(new Color(248, 249, 250));
         initPurchasePanel();
     }
     private void initPurchasePanel() {
+
+        List<Purchase> list = pc.getAll();
+        if (!list.isEmpty()) {
+            for (Purchase purchase : list) {
+                System.out.println(purchase);
+            }
+        }
+
          // header
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));

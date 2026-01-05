@@ -10,12 +10,18 @@ public class Purchase {
     private final int supplierId;
     private final LocalDate date;
     private final BigDecimal total;
+    private String supplierName;
+    private String supplierEmail;
+    private String supplierPhone;
 
-    public Purchase(int id, int supplierId, LocalDate date, BigDecimal total) {
+    public Purchase(int id, int supplierId, LocalDate date, BigDecimal total, String name, String email, String phone) {
         this.id = id;
         this.supplierId = supplierId;
         this.date = date;
         this.total = total;
+        this.supplierName = name;
+        this.supplierEmail = email;
+        this.supplierPhone = phone;
     }
 
     public Purchase(int supplierId, LocalDate date, BigDecimal total) {
@@ -36,5 +42,18 @@ public class Purchase {
 
     public BigDecimal getTotal() {
         return this.total;
+    }
+
+    @Override
+    public String toString() {
+        return "Purchase{" +
+                "id=" + id +
+                ", supplierId=" + supplierId +
+                ", date=" + date +
+                ", total=" + total +
+                ", supplierName='" + supplierName + '\'' +
+                ", supplierEmail='" + supplierEmail + '\'' +
+                ", supplierPhone='" + supplierPhone + '\'' +
+                '}';
     }
 }

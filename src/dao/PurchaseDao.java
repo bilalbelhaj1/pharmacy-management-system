@@ -23,7 +23,7 @@ public class PurchaseDao {
     public List<Purchase> getAll() {
         List<Purchase> purchases = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM purchase";
+            String sql = "SELECT p.id, p.date, p.supplier_id, p.total, CONCAT(s.first_name, \" \" ,s.last_name) as name, s.email,s.phone_number  FROM purchase as p JOIN supplier as s ON p.supplier_id = s.id;";
             PreparedStatement stm = conn.prepareStatement(sql);
             ResultSet res = stm.executeQuery();
 
@@ -32,7 +32,10 @@ public class PurchaseDao {
                         res.getInt("id"),
                         res.getInt("supplier_id"),
                         res.getDate("date").toLocalDate(),
-                        res.getBigDecimal("price")
+                        res.getBigDecimal("total"),
+                        res.getString("name"),
+                        res.getString("email"),
+                        res.getString("phone_number")
                 ));
             }
         } catch (SQLException e) {
