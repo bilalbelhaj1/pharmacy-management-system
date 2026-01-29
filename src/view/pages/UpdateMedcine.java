@@ -32,6 +32,7 @@ public class UpdateMedcine extends AddMedicine {
         this.descriptionInput.setText(medicine.description());
         this.stockInput.setText(medicine.stock() + "");
         this.exDataInput.setText(medicine.expiration_date().toString());
+        this.addButton.setText("Update");
     }
 
     @Override

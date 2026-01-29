@@ -170,7 +170,7 @@ public class ProductsPanel extends JPanel implements ActionListener {
             if (option == JFileChooser.APPROVE_OPTION) {
                 String name = fileChooser.getSelectedFile().getName();
                 String path = fileChooser.getSelectedFile().getParentFile().getPath();
-                String file = path + "\\" + name + ".xlsx";
+                String file = path + "\\" + name + ".xls";
                 try {
                     export(table, new File(file));
                 } catch (Exception er) {
