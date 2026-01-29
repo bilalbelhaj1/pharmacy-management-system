@@ -78,7 +78,7 @@ public class SalesPanel extends JPanel {
             for (Sale sale : sales) {
                 model.addRow(new Object[]{
                         sale.getId(),
-                        12,
+                        sale.getTotalMed(),
                         sale.getTotal() + "$",
                         sale.getDate(),
                         sale.getStatus().toString().toLowerCase()

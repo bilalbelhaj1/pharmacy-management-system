@@ -73,7 +73,7 @@ public class SaleDAO {
 
     public List<Sale> getSales() throws SQLException{
         List<Sale> sales = new ArrayList<>();
-        String sql = "SELECT * FROM sale";
+        String sql = "SELECT * FROM sale s JOIN (SELECT sale_id, SUM(quantity) as total_med FROM sale_item GROUP BY sale_id) as c on s.id = c.sale_id";
         PreparedStatement stm = conn.prepareStatement(sql);
         ResultSet res = stm.executeQuery();
         while (res.next()) {
@@ -82,7 +82,8 @@ public class SaleDAO {
                     res.getInt("id"),
                     res.getDate("date").toLocalDate(),
                     res.getBigDecimal("total"),
-                    SaleStatus.PAID
+                    SaleStatus.PAID,
+                    res.getInt("total_med")
                 )
             );
         }
@@ -106,11 +107,12 @@ public class SaleDAO {
             items.add(new SaleItem(
                     res.getInt("medicine_id"),
                     res.getInt("quantity"),
-                    res.getBigDecimal("price"),
+                    res.getBigDecimal("total"),
                     res.getString("name"),
                     res.getBigDecimal("price")
             ));
         }
+
         return items;
     }
 

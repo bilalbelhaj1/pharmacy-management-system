@@ -132,11 +132,13 @@ public class ProductsPanel extends JPanel implements ActionListener {
 
         if (confirm == JOptionPane.YES_OPTION) {
             int id = (int) table.getValueAt(row, 0);
+            System.out.println(id);
             try {
                 mc.deleteMedicine(id);
                 model.removeRow(row);
                 JOptionPane.showMessageDialog(this, "Medicine deleted successfully");
             } catch (SQLException e) {
+                e.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Something went wrong");
             }
         }
