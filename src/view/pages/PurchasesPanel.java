@@ -5,6 +5,7 @@ import model.Purchase;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
  **/
 public class PurchasesPanel extends JPanel {
     private JTable table;
+    String[] columns = {"#id", "date", "total", "Supplier Name", "Supplier Email", "Supplier Phone"};
     private final PurchaseController pc;
     public PurchasesPanel() {
         this.pc = new PurchaseController();
@@ -22,14 +24,6 @@ public class PurchasesPanel extends JPanel {
         initPurchasePanel();
     }
     private void initPurchasePanel() {
-
-        List<Purchase> purchases = pc.getAll();
-        if (!purchases.isEmpty()) {
-            for (Purchase purchase : purchases) {
-                System.out.println(purchase);
-            }
-        }
-
          // header
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -60,13 +54,19 @@ public class PurchasesPanel extends JPanel {
 
         styleButton(viewButton, new Color(13, 110, 253));
         styleButton(deleteButton, new Color(220, 53, 69));
+        deleteButton.addActionListener(e -> deletePurchase());
 
         headerPanel.add(filterPanel, BorderLayout.WEST);
         headerPanel.add(buttonsPanel, BorderLayout.EAST);
 
+        loadData();
+
+        this.add(headerPanel, BorderLayout.NORTH);
+    }
+
+    private void loadData(){
+        List<Purchase> purchases = pc.getAll();
         // main table
-        String[] columns = {"#id", "date", "total", "Supplier Name", "Supplier Email", "Supplier Phone"};
-        String[][] data = new String[30][6];
         DefaultTableModel model = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int col) {
@@ -94,9 +94,7 @@ public class PurchasesPanel extends JPanel {
         tablePanel.add(pane);
 
         this.add(pane, BorderLayout.CENTER);
-        this.add(headerPanel, BorderLayout.NORTH);
     }
-
     private void styleButton(JButton btn, Color bg) {
         btn.setBackground(bg);
         btn.setForeground(Color.WHITE);
@@ -108,5 +106,24 @@ public class PurchasesPanel extends JPanel {
     private void styleComboBox(JComboBox<String> combo) {
         combo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         combo.setBackground(Color.WHITE);
+    }
+
+    private void deletePurchase() {
+        TableModel model = table.getModel();
+        int row = table.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this,"Please Select the purchase you want to delete", "Select purchasse", JOptionPane.WARNING_MESSAGE);
+        } else{
+            int confirm = JOptionPane.showConfirmDialog(this, "are you sure you want to delete this purchase", "confirmation", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                int id = (int) model.getValueAt(row, 0);
+                int res = pc.deletePurchase(id);
+                if (res == 1) {
+                    loadData();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Something went wrong, could not delete this purchase", "deletion failed", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
     }
 }

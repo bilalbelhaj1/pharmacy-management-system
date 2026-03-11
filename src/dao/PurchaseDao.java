@@ -20,6 +20,7 @@ public class PurchaseDao {
 
     // Create new Purchase
 
+    // get all purchases
     public List<Purchase> getAll() {
         List<Purchase> purchases = new ArrayList<>();
         try {
@@ -43,4 +44,15 @@ public class PurchaseDao {
         }
         return purchases;
     }
+
+    // delete purchase
+
+    public void deletePurchase(int id) throws SQLException {
+        Connection conn = DbConnection.getConnection();
+        String sql = "DELETE FROM purchase WHERE id = ?";
+        PreparedStatement stm = conn.prepareStatement(sql);
+        stm.setInt(1, id);
+        stm.executeUpdate();
+    }
+
 }

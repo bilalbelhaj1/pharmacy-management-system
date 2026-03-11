@@ -3,6 +3,7 @@ package controller;
 import dao.PurchaseDao;
 import model.Purchase;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -16,5 +17,14 @@ public class PurchaseController {
 
     public List<Purchase> getAll() {
         return dao.getAll();
+    }
+    public int deletePurchase(int id) {
+        try {
+            dao.deletePurchase(id);
+            return 1;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 }
